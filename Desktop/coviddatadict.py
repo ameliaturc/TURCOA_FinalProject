@@ -51,23 +51,18 @@ def covid_database():
     dir_path = os.path.dirname(os.path.realpath(__file__))
     conn = sqlite3.connect(dir_path + "/main_database.db")
     cur = conn.cursor()
-    
-    necessary_info = cur.execute("DROP TABLE IF EXISTS CovidData")
-    cur.execute("CREATE TABLE CovidData (date INTEGER PRIMARY KEY, positive TEXT)")
-    covid_lst = []
-    for i in necessary_info:
-        covid_lst.append(i[0])
-    count = 0
+    try:
+        attempt = len(cur.execute("SELECT * FROM CovidData").fetchall())
+    except:
+        attempt = 0
+        cur.execute("CREATE TABLE CovidData (date INTEGER PRIMARY KEY, positive TEXT)")
     day_data = covidapi()
     line = 'INSERT OR IGNORE INTO CovidData (date, positive) VALUES (?, ?)'
-    for day in day_data:
-        if count == 25:
-            break
+    for day in day_data[attempt: attempt+25]:
         if day[0] in day_data:
             continue
         else:
             cur.execute(line, (day[0], day[1]))
-            count += 1
     conn.commit()
     conn.close()
 
@@ -76,22 +71,18 @@ def zoom_database():
     dir_path = os.path.dirname(os.path.realpath(__file__))
     conn = sqlite3.connect(dir_path + "/main_database.db")
     cur = conn.cursor()
-    necessary_info = cur.execute("DROP TABLE IF EXISTS ZoomNumbers")
-    cur.execute("CREATE TABLE ZoomNumbers (date INTEGER, high FLOAT)")
-    zoom_lst = []
-    for i in necessary_info:
-        zoom_lst.append(i[0])
-    count = 0
+    try:
+        attempt = len(cur.execute("SELECT * FROM ZoomNumbers").fetchall())
+    except:
+        attempt = 0
+        cur.execute("CREATE TABLE ZoomNumbers (date INTEGER, high FLOAT)")
     day_data = zoomapi()
     line = 'INSERT OR IGNORE INTO ZoomNumbers (date, high) VALUES (?, ?)'
-    for day in day_data:
-        if count == 25:
-            break
+    for day in day_data[attempt: attempt + 25]:
         if day[0] in day_data:
             continue
         else:
             cur.execute(line, (day[0].replace("-", ""), day[1]))
-            count += 1
     conn.commit()
     conn.close()
     
@@ -100,22 +91,18 @@ def amazon_database():
     dir_path = os.path.dirname(os.path.realpath(__file__))
     conn = sqlite3.connect(dir_path + "/main_database.db")
     cur = conn.cursor()
-    necessary_info = cur.execute("DROP TABLE IF EXISTS AmazonNumbers")
-    cur.execute("CREATE TABLE AmazonNumbers (date INTEGER, high FLOAT)")
-    amazon_lst = []
-    for i in necessary_info:
-        amazon_lst.append(i[0])
-    count = 0
+    try:
+        attempt = len(cur.execute("SELECT * FROM AmazonNumbers").fetchall())
+    except:
+        attempt = 0
+        cur.execute("CREATE TABLE AmazonNumbers (date INTEGER, high FLOAT)")
     day_data = amazonapi()
     line = 'INSERT OR IGNORE INTO AmazonNumbers (date, high) VALUES (?, ?)'
-    for day in day_data:
-        if count == 25:
-            break
+    for day in day_data[attempt: attempt + 25]:
         if day[0] in day_data:
             continue
         else:
             cur.execute(line, (day[0].replace("-", ""), day[1]))
-            count += 1
     conn.commit()
     conn.close()
 
@@ -123,6 +110,19 @@ def amazon_database():
 covidapi()
 zoomapi()
 amazonapi()
+#1st run
+covid_database()
+zoom_database()
+amazon_database()
+#2nd run
+covid_database()
+zoom_database()
+amazon_database()
+#3rd run
+covid_database()
+zoom_database()
+amazon_database()
+#4th run
 covid_database()
 zoom_database()
 amazon_database()

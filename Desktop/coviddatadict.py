@@ -77,7 +77,7 @@ def zoom_database():
     conn = sqlite3.connect(dir_path + "/main_database.db")
     cur = conn.cursor()
     necessary_info = cur.execute("DROP TABLE IF EXISTS ZoomNumbers")
-    cur.execute("CREATE TABLE ZoomNumbers (date TEXT, high FLOAT)")
+    cur.execute("CREATE TABLE ZoomNumbers (date INTEGER, high FLOAT)")
     zoom_lst = []
     for i in necessary_info:
         zoom_lst.append(i[0])
@@ -101,7 +101,7 @@ def amazon_database():
     conn = sqlite3.connect(dir_path + "/main_database.db")
     cur = conn.cursor()
     necessary_info = cur.execute("DROP TABLE IF EXISTS AmazonNumbers")
-    cur.execute("CREATE TABLE AmazonNumbers (date TEXT, high FLOAT)")
+    cur.execute("CREATE TABLE AmazonNumbers (date INTEGER, high FLOAT)")
     amazon_lst = []
     for i in necessary_info:
         amazon_lst.append(i[0])
